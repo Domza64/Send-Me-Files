@@ -1,10 +1,14 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 function UploadForm() {
   // TODO - Check if uploadID exists in URL, in that case don't ask for recpients username, also include username or uploadID in form submition.
   const dragCounter = useRef(0);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<String | null>(null);
+  const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [recipient, setRecipient] = useState("");
 
   const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -48,17 +52,67 @@ function UploadForm() {
     [files]
   );
 
+  useEffect(() => {
+    setError(null);
+  }, [files, recipient]);
+
   const removeFile = (index: number) => {
     const newFiles = [...files];
     newFiles.splice(index, 1);
     setFiles(newFiles);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    setUploading(true);
     e.preventDefault();
-    console.log("Files to upload:", files);
-    setFiles([]);
+
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    formData.append("recipient", recipient);
+
+    // TODO - move to env file
+    const host = "http://192.168.1.24:8080";
+    const endpoint = "/api/upload";
+    fetch(host + endpoint, {
+      method: "POST",
+      body: formData,
+      mode: "cors",
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          setSuccessfullyUploaded(true);
+          setFiles([]);
+          setRecipient("");
+        } else {
+          const errorMessage = await response.text();
+          throw new Error(errorMessage);
+        }
+      })
+      .catch((error) => {
+        setError(error.message || "Upload failed");
+      })
+      .finally(() => {
+        setUploading(false);
+      });
   };
+
+  if (successfullyUploaded) {
+    return (
+      <div className="border-2 bg-indigo-950/50 border-dashed rounded-lg p-10 text-center text-indigo-200 border-indigo-700">
+        <p>Files have been successfully uploaded!</p>
+        <button
+          className="underline mt-4 hover:text-indigo-400 transition-colors"
+          onClick={() => setSuccessfullyUploaded(false)}
+        >
+          Upload more
+        </button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -92,12 +146,16 @@ function UploadForm() {
           placeholder="Enter recipient's username"
           className="w-full px-3 py-2 bg-indigo-950/20 border border-gray-700 rounded-md text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
           required
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
         />
       </div>
 
-      <div className="text-rose-500 border-rose-700 bg-rose-950/60 rounded-md p-2 mt-4 border-dashed border-2">
-        Some error
-      </div>
+      {error && (
+        <div className="text-rose-500 border-rose-700 bg-rose-950/60 rounded-md p-2 mt-4 border-dashed border-2">
+          {error}
+        </div>
+      )}
 
       {files.length > 0 && (
         <div className="mt-5">
@@ -126,9 +184,10 @@ function UploadForm() {
           </ul>
           <button
             type="submit"
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            disabled={uploading}
+            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors disabled:bg-slate-600"
           >
-            Upload Files
+            {uploading ? "Uploading..." : "Upload Files"}
           </button>
         </div>
       )}
