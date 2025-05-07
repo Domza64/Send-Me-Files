@@ -18,7 +18,11 @@ To run this webapp in **development mode**:
     cd Send-Me-Files
     ```
 
-3. **Run the Spring Boot app** (backend):
+3. **Create .env.development in /frontend**
+
+   Copy the file named `EXAMPLE.env.development` and rename it to `.env.development`.
+
+4. **Run the Spring Boot app** (backend):
 
    Simply run the Spring Boot application (`./mvnw spring-boot:run` or via your IDE).
 

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { uploadFiles } from "../api/upload";
 
 function UploadForm() {
   // TODO - Check if uploadID exists in URL, in that case don't ask for recpients username, also include username or uploadID in form submition.
@@ -66,38 +67,17 @@ function UploadForm() {
     setUploading(true);
     e.preventDefault();
 
-    const formData = new FormData();
+    const { success, message } = await uploadFiles(files, recipient);
 
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
+    if (success) {
+      setSuccessfullyUploaded(true);
+      setFiles([]);
+      setRecipient("");
+    } else {
+      setError(message || "Upload failed");
+    }
 
-    formData.append("recipient", recipient);
-
-    // TODO - move to env file
-    const host = "http://192.168.1.24:8080";
-    const endpoint = "/api/upload";
-    fetch(host + endpoint, {
-      method: "POST",
-      body: formData,
-      mode: "cors",
-    })
-      .then(async (response) => {
-        if (response.ok) {
-          setSuccessfullyUploaded(true);
-          setFiles([]);
-          setRecipient("");
-        } else {
-          const errorMessage = await response.text();
-          throw new Error(errorMessage);
-        }
-      })
-      .catch((error) => {
-        setError(error.message || "Upload failed");
-      })
-      .finally(() => {
-        setUploading(false);
-      });
+    setUploading(false);
   };
 
   if (successfullyUploaded) {
