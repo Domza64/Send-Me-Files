@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
 
 function header() {
+  const { logout, userData, isLoading } = useUserContext();
   return (
     <header className="max-w-xs w-full mx-auto my-4">
       <nav>
@@ -11,9 +13,28 @@ function header() {
           <li>
             <Link to="/about">About</Link>
           </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
+          {isLoading ? (
+            <li>Loading...</li>
+          ) : userData ? (
+            <>
+              <li>
+                <span>{userData.username}</span>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

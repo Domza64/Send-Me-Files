@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.entity.UserInfo;
 import xyz.domza.sendmefiles.smf.repository.UserInfoRepository;
 
@@ -40,5 +41,14 @@ public class UserInfoService implements UserDetailsService {
     // TODO - Return list of DTOs to exclude passwords
     public List<UserInfo> getAllUsers() {
         return repository.findAll();
+    }
+
+    public UserDataDTO getUserData(String email) {
+        Optional<UserInfo> userInfo = repository.findByEmail(email);
+        if (userInfo.isPresent()) {
+            return new UserDataDTO(userInfo.get().getName(), List.of("someupload11", "someotherupload"));
+        }
+        // TODO - Make exception handler for this
+        throw new UsernameNotFoundException("User with email: " + email + " not found.");
     }
 }

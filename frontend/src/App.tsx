@@ -3,18 +3,23 @@ import Home from "./pages/HomePage";
 import About from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
+import Login from "./pages/LoginPage";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (
-    <Router>
-      <Header />
+    <UserProvider>
+      <Router>
+        <Header />
 
-      <Routes>
-        <Route path="*" element={<NotFound />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </Router>
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 

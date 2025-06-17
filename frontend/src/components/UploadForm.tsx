@@ -1,11 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import ErrorMessage from "./ErrorMessage";
+import { CgRemove } from "react-icons/cg";
 
 function UploadForm() {
   // TODO - Check if uploadID exists in URL, in that case don't ask for recpients username, also include username or uploadID in form submition.
   const dragCounter = useRef(0);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -151,11 +153,7 @@ function UploadForm() {
         />
       </div>
 
-      {error && (
-        <div className="text-rose-500 border-rose-700 bg-rose-950/60 rounded-md p-2 mt-4 border-dashed border-2">
-          {error}
-        </div>
-      )}
+      {error && <ErrorMessage error={error} />}
 
       {files.length > 0 && (
         <div className="mt-5">
@@ -177,7 +175,7 @@ function UploadForm() {
                   onClick={() => removeFile(index)}
                   className="text-rose-500 hover:text-rose-700 text-xl"
                 >
-                  x
+                  <CgRemove />
                 </button>
               </li>
             ))}
