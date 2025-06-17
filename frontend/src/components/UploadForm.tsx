@@ -117,7 +117,7 @@ function UploadForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div
-        className={`border-2 bg-indigo-950/20 border-dashed rounded-lg p-10 text-center cursor-pointer transition-all ${
+        className={`border-2 bg-indigo-950/20 border-dashed rounded-lg p-10 text-gray-200/90 text-center cursor-pointer transition-all ${
           isDragging ? "border-indigo-500" : "border-indigo-900"
         }`}
         onDragEnter={handleDragEnter}
@@ -127,7 +127,7 @@ function UploadForm() {
       >
         <p className="mb-2">Drag and drop files here</p>
         <p className="mb-4">or</p>
-        <label className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md cursor-pointer hover:bg-indigo-700 transition-colors">
+        <label className="inline-block px-4 py-2 bg-indigo-600 font-medium rounded-full cursor-pointer hover:bg-indigo-700 transition-colors">
           Browse Files
           <input type="file" multiple onChange={addFile} className="hidden" />
         </label>
