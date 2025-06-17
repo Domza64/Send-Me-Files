@@ -19,9 +19,9 @@ public class JwtService {
     // TODO - Not hardcode here
     public static final String SECRET = "dk39802jfd948hjf98234j2wioejd389dj2oidpjf1213e1qd322dqwsad32d23dasd21q92830qiwdhj98d32jqid";
 
-    public String generateToken(String email) { // Use email as username
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, email);
+        return createToken(claims, username);
     }
 
     private String createToken(Map<String, Object> claims, String email) {

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FaRegCopy } from "react-icons/fa6";
+import { useUserContext } from "../context/UserContext";
 
 function RequestFiles() {
+  const { userData } = useUserContext();
   const [copied, setCopied] = useState(false);
 
-  const requestURL = "http://localhost:5173&sendTo=MyUsername";
+  const requestURL = `http://localhost:5173/?sendTo=${userData?.username}`;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(requestURL);
     setCopied(true);

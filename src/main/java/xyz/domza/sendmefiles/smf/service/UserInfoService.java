@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.entity.UserInfo;
 import xyz.domza.sendmefiles.smf.repository.UserInfoRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class UserInfoService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserInfo> userDetail = repository.findByEmail(username); // Assuming 'email' is used as username
+        Optional<UserInfo> userDetail = repository.findByUsername(username);
 
         // Converting UserInfo to UserDetails
         return userDetail.map(UserInfoDetails::new)
@@ -43,12 +42,15 @@ public class UserInfoService implements UserDetailsService {
         return repository.findAll();
     }
 
-    public UserDataDTO getUserData(String email) {
-        Optional<UserInfo> userInfo = repository.findByEmail(email);
+    public Optional<UserDataDTO> getUserData(String username) {
+        Optional<UserInfo> userInfo = repository.findByUsername(username);
         if (userInfo.isPresent()) {
-            return new UserDataDTO(userInfo.get().getName(), List.of("someupload11", "someotherupload"));
+            return Optional.of(new UserDataDTO(userInfo.get().getUsername(), List.of("someupload11", "someotherupload")));
         }
-        // TODO - Make exception handler for this
-        throw new UsernameNotFoundException("User with email: " + email + " not found.");
+        return Optional.empty();
+    }
+
+    public void addUploadId(String username, String uploadId) {
+        // TODO - Add this upload to uploads repository, each upload can be connected to one user that recieved it and each user can have many recieved uploads...
     }
 }

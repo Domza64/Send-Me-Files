@@ -19,7 +19,7 @@ public class UploadController {
         this.uploadService = uploadService;
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<String> handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam("recipient") String recipient) {
         uploadService.uploadFile(files, recipient);
         return ResponseEntity.ok("File uploaded successfully.");

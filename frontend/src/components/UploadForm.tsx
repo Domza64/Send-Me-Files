@@ -1,8 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import ErrorMessage from "./ErrorMessage";
 import { CgRemove } from "react-icons/cg";
+import { useNavigate } from "react-router-dom";
 
-function UploadForm() {
+function UploadForm({ sendTo }: { sendTo?: string }) {
+  const navigate = useNavigate();
   // TODO - Check if uploadID exists in URL, in that case don't ask for recpients username, also include username or uploadID in form submition.
   const dragCounter = useRef(0);
   const [files, setFiles] = useState<File[]>([]);
@@ -11,6 +13,12 @@ function UploadForm() {
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [recipient, setRecipient] = useState("");
+
+  useEffect(() => {
+    if (sendTo) {
+      setRecipient(sendTo);
+    }
+  }, [sendTo]);
 
   const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -89,6 +97,7 @@ function UploadForm() {
           setSuccessfullyUploaded(true);
           setFiles([]);
           setRecipient("");
+          navigate("/");
         } else {
           const errorMessage = await response.text();
           throw new Error(errorMessage);
@@ -135,28 +144,34 @@ function UploadForm() {
         </label>
       </div>
 
-      <div className="mt-4">
-        <label
-          htmlFor="recipient"
-          className="block text-sm font-medium text-gray-300 mb-1"
-        >
-          Send to (username)
-        </label>
-        <input
-          id="recipient"
-          type="text"
-          placeholder="Enter recipient's username"
-          className="w-full px-3 py-2 bg-indigo-950/20 border border-gray-700 rounded-md text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-          required
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-        />
-      </div>
+      {!sendTo && (
+        <div className="mt-4">
+          <label
+            htmlFor="recipient"
+            className="block text-sm font-medium text-gray-300 mb-1"
+          >
+            Send to (username)
+          </label>
+          <input
+            id="recipient"
+            type="text"
+            placeholder="Enter recipient's username"
+            className="w-full px-3 py-2 bg-indigo-950/20 border border-gray-700 rounded-md text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+            required
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+          />
+        </div>
+      )}
 
-      {error && <ErrorMessage error={error} />}
+      {error && (
+        <div className="mt-4">
+          <ErrorMessage error={error} />
+        </div>
+      )}
 
       {files.length > 0 && (
-        <div className="mt-5">
+        <div className="mt-5 text-gray-200">
           <h3 className="font-medium mb-2">Selected Files:</h3>
           <ul className="space-y-2">
             {files.map((file, index) => (
@@ -180,13 +195,23 @@ function UploadForm() {
               </li>
             ))}
           </ul>
-          <button
-            type="submit"
-            disabled={uploading}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors disabled:bg-slate-600"
-          >
-            {uploading ? "Uploading..." : "Upload Files"}
-          </button>
+          <div className="flex items-center mt-4">
+            <button
+              type="submit"
+              disabled={uploading}
+              className="px-4 py-2 bg-indigo-600 font-medium rounded-md hover:bg-indigo-700 transition-colors disabled:bg-slate-600"
+            >
+              {uploading ? "Uploading..." : "Upload Files"}
+            </button>
+            {sendTo && (
+              <div className="ml-4">
+                Sending files to:{" "}
+                <span className="text-lg font-semibold text-indigo-500">
+                  {sendTo}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </form>

@@ -4,8 +4,15 @@ import UploadForm from "../components/UploadForm";
 import { HiArrowsRightLeft } from "react-icons/hi2";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
+import { useUserContext } from "../context/UserContext";
+import { Link, useSearchParams } from "react-router-dom";
 
 function Home() {
+  const { userData, isLoading } = useUserContext();
+
+  const [searchParams] = useSearchParams();
+  const sendTo = searchParams.get("sendTo");
+
   return (
     <main className="flex justify-center items-center flex-grow flex-col p-4">
       <div className="w-full max-w-3xl space-y-12">
@@ -19,18 +26,30 @@ function Home() {
           </p>
         </div>
 
-        <div>
-          <h2 className="pb-4 text-indigo-500 font-semibold text-xl">
-            Request files
-          </h2>
-          <RequestFiles />
-        </div>
+        {!isLoading && userData ? (
+          <div>
+            <h2 className="pb-4 text-indigo-500 font-semibold text-xl">
+              Request files
+            </h2>
+            <RequestFiles />
+          </div>
+        ) : (
+          <div className="bg-indigo-950/20 border-dashed border-2 border-indigo-900 rounded-lg text-center">
+            <h2 className="text-indigo-500 font-semibold text-xl p-2">
+              Please{" "}
+              <Link to={"/login"} className="underline">
+                Login
+              </Link>{" "}
+              to Request files
+            </h2>
+          </div>
+        )}
 
         <div>
           <h2 className="pb-4 text-indigo-500 font-semibold text-xl">
             Upload files
           </h2>
-          <UploadForm />
+          <UploadForm sendTo={sendTo || undefined} />
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 pt-6">

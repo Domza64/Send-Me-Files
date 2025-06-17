@@ -23,11 +23,14 @@ function Login() {
 
     try {
       // TODO: Move to some constants or env file
-      const response = await fetch("http://localhost:8080/auth/generateToken", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: email, password }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/auth/generateToken",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: email, password }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Invalid credentials");

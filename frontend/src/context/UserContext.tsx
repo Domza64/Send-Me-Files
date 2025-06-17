@@ -27,7 +27,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/user/userData", {
+      const response = await fetch("http://localhost:8080/api/user/userData", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -43,6 +43,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         });
         setLoggedIn(true);
       } else {
+        console.log(response);
         setUserData(null);
       }
     } catch (error) {

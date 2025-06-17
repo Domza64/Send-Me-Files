@@ -12,7 +12,7 @@ import xyz.domza.sendmefiles.smf.service.JwtService;
 import xyz.domza.sendmefiles.smf.service.UserInfoService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
