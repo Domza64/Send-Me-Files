@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import xyz.domza.sendmefiles.smf.entity.AuthRequest;
+import xyz.domza.sendmefiles.smf.dto.AuthRequestDTO;
 import xyz.domza.sendmefiles.smf.entity.UserInfo;
 import xyz.domza.sendmefiles.smf.service.JwtService;
 import xyz.domza.sendmefiles.smf.service.UserInfoService;
@@ -31,12 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public String authenticateAndGetToken(@RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password())
         );
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
+            return jwtService.generateToken(authRequest.username());
         } else {
             throw new UsernameNotFoundException("Invalid user request!");
         }

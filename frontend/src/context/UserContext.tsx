@@ -39,7 +39,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json();
         setUserData({
           username: data.username,
-          recievedUploads: data.recievedUploads,
+          recievedUploads: data.receivedUploads,
         });
         setLoggedIn(true);
       } else {

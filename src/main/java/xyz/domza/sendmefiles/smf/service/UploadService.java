@@ -6,16 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.exception.StorageException;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UploadService {
 
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private CloudflareService cloudflareService;
 
     public void uploadFile(List<MultipartFile> files, String recipient) throws StorageException, UsernameNotFoundException {
         Optional<UserDataDTO> userData = userInfoService.getUserData(recipient);
@@ -33,10 +35,9 @@ public class UploadService {
             if (Objects.requireNonNull(file.getOriginalFilename()).endsWith(".txt")) { // Temporary test for throwing StorageException
                 throw new StorageException("StorageException thrown to test ExceptionHandling - upload a non txt file for success.");
             }
-            System.out.println("Uploading " + file.getOriginalFilename() + " to S3 / R2 or something similar...");
+            UUID uuid = UUID.randomUUID();
+            userInfoService.addRecievedUpload(userData.get().username(), uuid.toString());
+            cloudflareService.uploadFiles(files, uuid.toString());
         }
-
-        String uploadId = "someNewUploadId";
-        userInfoService.addUploadId(userData.get().username(), uploadId);
     }
 }

@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Login from "./pages/LoginPage";
 import { UserProvider } from "./context/UserContext";
+import RecievedUploads from "./pages/RecievedUploadsPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
+          <Route path="/recieved" element={<RecievedUploads />} />
         </Routes>
       </Router>
     </UserProvider>
