@@ -85,7 +85,7 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
     formData.append("recipient", recipient);
 
     // TODO - move to env file
-    const host = "http://192.168.1.24:8080";
+    const host = "http://localhost:8080";
     const endpoint = "/api/upload";
     fetch(host + endpoint, {
       method: "POST",

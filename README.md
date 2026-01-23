@@ -5,7 +5,7 @@
 
 ---
 
-### ⚡ Development Setup
+### Development Setup
 
 To run this webapp in **development mode**:
 
@@ -22,14 +22,18 @@ To run this webapp in **development mode**:
 
    Copy the file named `EXAMPLE.env.development` and rename it to `.env.development`.
 
-4. **Run the Spring Boot app** (backend):
+4. **Create .env in project root**
+
+   Copy the file named `EXAMPLE.env` and rename it to `.env`.
+
+5. **Run the Spring Boot app** (backend):
 
    Simply run the Spring Boot application (`./mvnw spring-boot:run` or via your IDE).
 
 > **Note:** Frontend will be automatically served on localhost:5173 by default.
 
 
-### 📚 Why did I build this?
+### Why did I build this?
 
 This project is mainly built for personal use, but also as a **portfolio project** to showcase my ability to use:
 - **Frontend**: React (not the best React app ever since primary focus is on backend)

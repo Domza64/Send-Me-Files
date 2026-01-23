@@ -46,6 +46,7 @@ public class CloudflareR2Client {
     }
 
     public void uploadFiles(List<MultipartFile> files, String id) {
+        // TODO: Load from .env
         String bucket = "smf-uploads";
 
         for (MultipartFile file : files) {
