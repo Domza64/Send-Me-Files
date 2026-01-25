@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.exception.StorageException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,25 +21,22 @@ public class UploadService {
         this.cloudflareService = cloudflareService;
     }
 
-    public void uploadFile(List<MultipartFile> files, String recipient) throws StorageException, UsernameNotFoundException {
-        Optional<UserDataDTO> userData = userService.getUserData(recipient);
+    // TODO: Support requestUploadId
+    public void uploadFiles(List<MultipartFile> files, String recipientUsername, String message) throws StorageException, UsernameNotFoundException {
+        Optional<UserDataDTO> userData = userService.getUserDataByUsername(recipientUsername);
         if (userData.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
-        // TODO - Implement upload to S3, R2 or something similar, could throw StorageException
-        // In future files will be uploaded to specific users. In that case, check if user exists, user accepts all
-        // uploads, or just private ones that user requested... Throw necessary Exceptions and implement handler in upload controller
 
-        // check if recipient exists in upload id list, if yes, upload to that user,
-        // else it could be a username, search for that username and if exists upload to that user
-        // else throw some exception like Recipient not found...
-        for (MultipartFile file : files) {
-            if (Objects.requireNonNull(file.getOriginalFilename()).endsWith(".txt")) { // Temporary test for throwing StorageException
+        // TESTING PURPOSES, if file is .txt throw Exception and aboard upload
+        files.forEach(file -> {
+            if (Objects.requireNonNull(file.getOriginalFilename()).endsWith(".txt")) {
                 throw new StorageException("StorageException thrown to test ExceptionHandling - upload a non txt file for success.");
             }
-            UUID uuid = UUID.randomUUID();
-            userService.addRecievedUpload(userData.get().username(), uuid.toString());
-            cloudflareService.uploadFiles(files, uuid.toString());
-        }
+        });
+
+        UUID uploadId = UUID.randomUUID();
+        cloudflareService.uploadFiles(files, uploadId.toString());
+        userService.addReceivedUpload(userData.get().username(), uploadId.toString(), message, files.size());
     }
 }

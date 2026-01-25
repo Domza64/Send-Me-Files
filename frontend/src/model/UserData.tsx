@@ -3,7 +3,9 @@ export default interface UserData {
   recievedUploads: UploadInfo[];
 }
 
-interface UploadInfo {
+export interface UploadInfo {
   uploadId: string;
-  title: string;
+  message: string;
+  uploadDate: string;
+  fileCount: number;
 }

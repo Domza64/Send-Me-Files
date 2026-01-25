@@ -13,6 +13,7 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [recipient, setRecipient] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (sendTo) {
@@ -59,7 +60,7 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
         e.dataTransfer.clearData();
       }
     },
-    [files]
+    [files],
   );
 
   useEffect(() => {
@@ -83,6 +84,7 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
     });
 
     formData.append("recipient", recipient);
+    formData.append("message", message);
 
     // TODO - move to env file
     const host = "http://localhost:8080";
@@ -156,13 +158,35 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
             id="recipient"
             type="text"
             placeholder="Enter recipient's username"
-            className="w-full px-3 py-2 bg-indigo-950/20 border border-gray-700 rounded-md text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-3 py-2
+            text-gray-200 placeholder-gray-400 bg-indigo-950/20
+            focus:outline-none focus:border-indigo-500 border-dashed border-2 border-indigo-900 rounded-lg"
             required
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
           />
         </div>
       )}
+
+      <div className="mt-4">
+        <label
+          htmlFor="recipient"
+          className="block text-sm font-medium text-gray-300 mb-1"
+        >
+          Message
+        </label>
+        <input
+          id="recipient"
+          type="text"
+          placeholder="Enter a message for recipient"
+          className="w-full px-3 py-2
+          text-gray-200 placeholder-gray-400 bg-indigo-950/20
+          focus:outline-none focus:border-indigo-500 border-dashed border-2 border-indigo-900 rounded-lg"
+          required
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
 
       {error && (
         <div className="mt-4">
@@ -199,9 +223,9 @@ function UploadForm({ sendTo }: { sendTo?: string }) {
             <button
               type="submit"
               disabled={uploading}
-              className="px-4 py-2 bg-indigo-600 font-medium rounded-md hover:bg-indigo-700 transition-colors disabled:bg-slate-600"
+              className={`${uploading ? "animate-pulse" : ""} px-4 py-2 bg-indigo-600 font-medium rounded-md hover:bg-indigo-700 transition-colors disabled:bg-slate-600`}
             >
-              {uploading ? "Uploading..." : "Upload Files"}
+              {uploading ? "Uploading..." : "Send Files"}
             </button>
             {sendTo && (
               <div className="ml-4">

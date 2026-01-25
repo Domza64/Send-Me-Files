@@ -27,7 +27,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/user/userData", {
+      const response = await fetch("http://localhost:8080/api/user/data", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

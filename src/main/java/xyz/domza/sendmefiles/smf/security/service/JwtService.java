@@ -20,10 +20,10 @@ public class JwtService {
     // TODO - Not hardcode here
     public static final String SECRET = "dk39802jfd948hjf98234j2wioejd389dj2oidpjf1213e1qd322dqwsad32d23dasd21q92830qiwdhj98d32jqid";
 
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         // TODO: Add users role to token?
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        return createToken(claims, email);
     }
 
     private String createToken(Map<String, Object> claims, String email) {
@@ -31,7 +31,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30 * 10))
                 .signWith(SignatureAlgorithm.HS256, getSignKey())
                 .compact();
     }
@@ -41,7 +41,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -66,7 +66,7 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, UserInfoDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        final String email = extractEmail(token);
+        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 }

@@ -20,9 +20,11 @@ import java.util.Optional;
 
 public class CloudflareR2Client {
     private final S3Client s3Client;
+    private final String bucket;
 
-    public CloudflareR2Client(S3Config config) {
+    public CloudflareR2Client(S3Config config, String bucket) {
         this.s3Client = buildS3Client(config);
+        this.bucket = bucket;
     }
 
     public List<Bucket> listBuckets() {
@@ -46,9 +48,6 @@ public class CloudflareR2Client {
     }
 
     public void uploadFiles(List<MultipartFile> files, String id) {
-        // TODO: Load from .env
-        String bucket = "smf-uploads";
-
         for (MultipartFile file : files) {
             try {
                 String objectKey = id + "/" + file.getOriginalFilename();

@@ -1,22 +1,24 @@
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
-function header() {
+export default function Header() {
   const { logout, userData, isLoading } = useUserContext();
   return (
-    <header className="max-w-lg w-full mx-auto my-4">
+    <header className="max-w-3xl w-full mx-auto my-4 px-4">
       <nav>
         <ul className="flex justify-between font-semibold">
-          <li>
-            <Link to="/">Send Me Files</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
+          <div className="flex gap-4">
+            <li>
+              <Link to="/">Send Me Files</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </div>
           {isLoading ? (
             <li>Loading...</li>
           ) : userData ? (
-            <>
+            <div className="flex gap-4">
               <li>
                 <Link to="/recieved">Recieved</Link>
               </li>
@@ -29,7 +31,7 @@ function header() {
                   Logout
                 </button>
               </li>
-            </>
+            </div>
           ) : (
             <li>
               <Link to="/login">Login</Link>
@@ -40,5 +42,3 @@ function header() {
     </header>
   );
 }
-
-export default header;

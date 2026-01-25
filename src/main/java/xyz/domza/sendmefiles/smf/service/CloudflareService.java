@@ -21,12 +21,14 @@ public class CloudflareService {
         String accountId = env.getProperty("cloudflare.account-id");
         String accessKey = env.getProperty("cloudflare.access-key");
         String secretKey = env.getProperty("cloudflare.secret-key");
+        String bucket = env.getProperty("cloudflare.bucket");
+
         CloudflareR2Client.S3Config config = new CloudflareR2Client.S3Config(
                 accountId,
                 accessKey,
                 secretKey
         );
-        this.r2Client = new CloudflareR2Client(config);
+        this.r2Client = new CloudflareR2Client(config, bucket);
     }
 
     public void uploadFiles(List<MultipartFile> files, String id) {

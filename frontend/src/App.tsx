@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Login from "./pages/LoginPage";
 import { UserProvider } from "./context/UserContext";
 import RecievedUploads from "./pages/RecievedUploadsPage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/recieved" element={<RecievedUploads />} />
         </Routes>
+
+        <Footer />
       </Router>
     </UserProvider>
   );

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class UserInfoService implements UserDetailsService {
-    private UserInfoRepository repository;
+    private final UserInfoRepository repository;
 
     public UserInfoService(UserInfoRepository repository) {
         this.repository = repository;
@@ -20,6 +20,7 @@ public class UserInfoService implements UserDetailsService {
 
     /**
      * Loads a user for authentication by email address.
+     * (named "loadUserByUsername" due to Spring Security API constraints)
      * <p>
      * Although the method name and parameter are defined as {@code loadUserByUsername}
      * by Spring Security's {@link UserDetailsService} contract, this application
@@ -28,17 +29,16 @@ public class UserInfoService implements UserDetailsService {
      * Internally, the provided {@code username} parameter is therefore treated as
      * an email and used to look up the user via {@code findByEmail}.
      *
-     * @param username the user's email address (named "username" due to
-     *                 Spring Security API constraints)
+     * @param email the user's email address
      * @return a fully populated {@link UserDetails} instance
      * @throws UsernameNotFoundException if no user is found for the given email
      */
     @Override
-    public UserInfoDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserInfo> userDetail = repository.findByEmail(username);
+    public UserInfoDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<UserInfo> userDetail = repository.findByEmail(email);
 
         // Converting UserInfo to UserDetails
         return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 }

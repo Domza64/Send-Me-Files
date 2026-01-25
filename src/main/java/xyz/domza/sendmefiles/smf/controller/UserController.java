@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.domza.sendmefiles.smf.dto.UploadInfoDTO;
 import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.service.UserService;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,9 +21,16 @@ public class UserController {
         this.userService = userInfoService;
     }
 
-    @GetMapping("/userData")
+    @GetMapping("/data")
     public ResponseEntity<UserDataDTO> getUserData(Principal principal) {
-        Optional<UserDataDTO> userData = userService.getUserData(principal.getName());
+        Optional<UserDataDTO> userData = userService.getUserDataByEmail(principal.getName());
         return userData.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/recieved")
+    public ResponseEntity<List<UploadInfoDTO>> getReceivedUploads(Principal principal) {
+        String email = principal.getName();
+        List<UploadInfoDTO> receivedUploads = userService.getUploads(email);
+        return ResponseEntity.ok(receivedUploads);
     }
 }

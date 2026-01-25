@@ -1,7 +1,6 @@
 package xyz.domza.sendmefiles.smf.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,14 +15,18 @@ public class UploadInfo {
     @Getter
     private String uploadId;
     @Getter
-    private String title;
+    private String message;
+    @Getter
     private Date uploadDate;
+    @Getter
+    private int fileCount;
 
-    public UploadInfo(String uploadId, String title, Date uploadDate, UserInfo user) {
+    public UploadInfo(String uploadId, String title, Date uploadDate, UserInfo user, int fileCount) {
         this.uploadId = uploadId;
-        this.title = title;
+        this.message = title;
         this.uploadDate = uploadDate;
         this.user = user;
+        this.fileCount = fileCount;
     }
 
     @ManyToOne
