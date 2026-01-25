@@ -1,25 +1,27 @@
-package xyz.domza.sendmefiles.smf.service;
+package xyz.domza.sendmefiles.smf.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import xyz.domza.sendmefiles.smf.security.UserInfoDetails;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Component
+@Service
 public class JwtService {
 
     // TODO - Not hardcode here
     public static final String SECRET = "dk39802jfd948hjf98234j2wioejd389dj2oidpjf1213e1qd322dqwsad32d23dasd21q92830qiwdhj98d32jqid";
 
     public String generateToken(String username) {
+        // TODO: Add users role to token?
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
@@ -63,8 +65,8 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserInfoDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 }

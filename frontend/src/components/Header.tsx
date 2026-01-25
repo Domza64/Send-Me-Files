@@ -4,7 +4,7 @@ import { useUserContext } from "../context/UserContext";
 function header() {
   const { logout, userData, isLoading } = useUserContext();
   return (
-    <header className="max-w-xs w-full mx-auto my-4">
+    <header className="max-w-lg w-full mx-auto my-4">
       <nav>
         <ul className="flex justify-between font-semibold">
           <li>
@@ -18,7 +18,7 @@ function header() {
           ) : userData ? (
             <>
               <li>
-                <span>{userData.username}</span>
+                <Link to="/recieved">Recieved</Link>
               </li>
               <li>
                 <button

@@ -58,7 +58,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (token: string) => {
-    // TODO: use httponly cookie instead of saving token to sessionStorage, this is temp soluttion
+    // TODO: use httponly cookie with CSRF tokens instead of saving JWT to sessionStorage, this is temp soluttion
     sessionStorage.setItem("token", token);
     fetchUserData();
     setLoggedIn(true);

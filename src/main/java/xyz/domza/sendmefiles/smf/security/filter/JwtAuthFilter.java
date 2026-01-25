@@ -1,4 +1,4 @@
-package xyz.domza.sendmefiles.smf.filter;
+package xyz.domza.sendmefiles.smf.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,23 +7,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import xyz.domza.sendmefiles.smf.service.JwtService;
+import xyz.domza.sendmefiles.smf.security.UserInfoDetails;
+import xyz.domza.sendmefiles.smf.security.service.UserInfoService;
+import xyz.domza.sendmefiles.smf.security.service.JwtService;
 import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
+    private final UserInfoService userInfoService;
     private final JwtService jwtService;
 
     @Autowired
-    public JwtAuthFilter(UserDetailsService userDetailsService, JwtService jwtService) {
-        this.userDetailsService = userDetailsService;
+    public JwtAuthFilter(UserInfoService userInfoService, JwtService jwtService) {
+        this.userInfoService = userInfoService;
         this.jwtService = jwtService;
     }
 
@@ -39,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserInfoDetails userDetails = userInfoService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

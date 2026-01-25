@@ -1,4 +1,4 @@
-package xyz.domza.sendmefiles.smf.config;
+package xyz.domza.sendmefiles.smf.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

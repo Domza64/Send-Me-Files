@@ -1,6 +1,5 @@
 package xyz.domza.sendmefiles.smf.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,14 +12,16 @@ import java.util.UUID;
 
 @Service
 public class UploadService {
-
-    @Autowired
-    private UserInfoService userInfoService;
-    @Autowired
+    private UserService userService;
     private CloudflareService cloudflareService;
 
+    public UploadService(UserService userService, CloudflareService cloudflareService) {
+        this.userService = userService;
+        this.cloudflareService = cloudflareService;
+    }
+
     public void uploadFile(List<MultipartFile> files, String recipient) throws StorageException, UsernameNotFoundException {
-        Optional<UserDataDTO> userData = userInfoService.getUserData(recipient);
+        Optional<UserDataDTO> userData = userService.getUserData(recipient);
         if (userData.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -36,7 +37,7 @@ public class UploadService {
                 throw new StorageException("StorageException thrown to test ExceptionHandling - upload a non txt file for success.");
             }
             UUID uuid = UUID.randomUUID();
-            userInfoService.addRecievedUpload(userData.get().username(), uuid.toString());
+            userService.addRecievedUpload(userData.get().username(), uuid.toString());
             cloudflareService.uploadFiles(files, uuid.toString());
         }
     }

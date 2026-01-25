@@ -7,6 +7,18 @@ services:
       - 'POSTGRES_USER=myuser'
     ports:
       - '5432:5432'
+    healthcheck:
+      test: pg_isready -U myuser -h 127.0.0.1
+      interval: 5s
+  pgweb:
+    image: sosedoff/pgweb:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - PGWEB_DATABASE_URL=postgres://myuser:secret@postgres:5432/mydatabase?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
   react-app:
     build: ./frontend
     ports:

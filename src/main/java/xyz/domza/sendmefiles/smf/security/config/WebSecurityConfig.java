@@ -1,4 +1,4 @@
-package xyz.domza.sendmefiles.smf.config;
+package xyz.domza.sendmefiles.smf.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,14 +10,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import xyz.domza.sendmefiles.smf.filter.JwtAuthFilter;
+import xyz.domza.sendmefiles.smf.security.service.UserInfoService;
+import xyz.domza.sendmefiles.smf.security.filter.JwtAuthFilter;
 import java.util.List;
 
 @Configuration
@@ -26,13 +26,13 @@ public class WebSecurityConfig {
 
     private PasswordEncoder encoder;
     private final JwtAuthFilter jwtAuthFilter;
-    private final UserDetailsService userDetailsService;
+    private final UserInfoService userInfoService;
 
     public WebSecurityConfig(PasswordEncoder passwordEncoder, JwtAuthFilter jwtAuthFilter,
-                             UserDetailsService userDetailsService) {
+                             UserInfoService userInfoService) {
         this.encoder = passwordEncoder;
         this.jwtAuthFilter = jwtAuthFilter;
-        this.userDetailsService = userDetailsService;
+        this.userInfoService = userInfoService;
     }
 
     @Bean
@@ -44,8 +44,8 @@ public class WebSecurityConfig {
                         // Public endpoints
                         .requestMatchers("/api/auth/addNewUser", "/api/auth/generateToken", "/api/upload").permitAll()
                         // Role-based endpoints
-                        .requestMatchers("/api/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
@@ -78,7 +78,7 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(userInfoService);
         provider.setPasswordEncoder(encoder);
         return provider;
     }

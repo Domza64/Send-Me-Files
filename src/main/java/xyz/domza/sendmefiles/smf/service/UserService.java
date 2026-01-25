@@ -1,8 +1,5 @@
 package xyz.domza.sendmefiles.smf.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,27 +8,18 @@ import xyz.domza.sendmefiles.smf.dto.UserDataDTO;
 import xyz.domza.sendmefiles.smf.entity.UploadInfo;
 import xyz.domza.sendmefiles.smf.entity.UserInfo;
 import xyz.domza.sendmefiles.smf.repository.UserInfoRepository;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserInfoService implements UserDetailsService {
-
-    @Autowired
+public class UserService {
+    private PasswordEncoder encoder;
     private UserInfoRepository repository;
 
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserInfo> userDetail = repository.findByUsername(username);
-
-        // Converting UserInfo to UserDetails
-        return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public UserService(PasswordEncoder encoder, UserInfoRepository repository) {
+        this.encoder = encoder;
+        this.repository = repository;
     }
 
     public String addUser(UserInfo userInfo) {
