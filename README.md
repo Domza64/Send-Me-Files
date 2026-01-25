@@ -1,11 +1,11 @@
 
 # Send Me Files
 
-**Send Me Files** is a web app I built to easily transfer files, specifically pictures and videos (though it supports any type of file). I created it for my own needs, as a way to receive files without relying on apps like WhatsApp. It’s also a cool portfolio project that demonstrates my skills in full-stack development.
+**Send Me Files** is a web app I built for fun. I made it for my own needs, as a way to easily transfer files (i guess mostly pctures and videos) without relying on apps like WhatsApp. It’s also a cool learning and portfolio project.
 
 ---
 
-### Development Setup
+## Development Setup
 
 To run this webapp in **development mode**:
 
@@ -30,15 +30,17 @@ To run this webapp in **development mode**:
 
    Simply run the Spring Boot application (`./mvnw spring-boot:run` or via your IDE).
 
-> **Note:** Frontend will be automatically served on localhost:5173 by default.
+> **Note:** Frontend is automatically served on localhost:5173 and [PGWEB](https://github.com/sosedoff/pgweb) UI is served on localhost:8081 cause it's usefull in dev :)
 
 
-### Why did I build this?
+## Why did I build this?
 
-This project is mainly built for personal use, but also as a **portfolio project** to showcase my ability to use:
-- **Frontend**: React (not the best React app ever since primary focus is on backend)
-- **Backend**: Spring Boot
-- **Docker**: For containerization and scalability
-- **JWT Authentication**: To manage secure user sessions
+This project is mainly built for fun and personal use and although the app is very simple, it demonstrates how various technologies can work together, which is one of the things I love most about full-stack web development.
 
-Although the app is very simple, it demonstrates how various technologies can work together, which is one of the things I love most about web development. This project showcases my ability to build full-stack applications, manage secure user sessions, and leverage containerization for modern web app deployment.
+## TODO:
+
+- [ ] Finish all TODOs in code...
+- [ ] Implement kafka (do i need it? No. But why not try it out anyway?) (eg. when user wants to download zip of all files, send message to that topic and then consumer will begin zipping it up when it recieves messaage.)
+- [ ] Bunch of other stuff...
+
+Made with ❤️ by [Domza64](https://www.domza.xyz)
