@@ -38,7 +38,6 @@ function Login() {
 
       const token = await response.text();
       login(token);
-      navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

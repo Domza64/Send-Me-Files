@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import useSWR from "swr";
+import fetcher from "../api/fetcher";
+import { createContext, useContext, useState } from "react";
 import UserData from "../model/UserData";
 
 interface UserContextType {
@@ -12,67 +14,41 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState<string | null>(
+    sessionStorage.getItem("token"),
+  );
 
-  const fetchUserData = async () => {
-    setIsLoading(true);
-    const token = sessionStorage.getItem("token");
+  const {
+    data: userData,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<UserData | null>(
+    token ? "http://localhost:8080/api/user/data" : null,
+    fetcher,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    },
+  );
 
-    if (!token) {
-      setUserData(null);
-      setIsLoading(false);
-      return;
-    }
+  const loggedIn = !!userData && !error;
 
-    try {
-      const response = await fetch("http://localhost:8080/api/user/data", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUserData({
-          username: data.username,
-          recievedUploads: data.receivedUploads,
-        });
-        setLoggedIn(true);
-      } else {
-        console.log(response);
-        setUserData(null);
-      }
-    } catch (error) {
-      setUserData(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const login = (token: string) => {
-    // TODO: use httponly cookie with CSRF tokens instead of saving JWT to sessionStorage, this is temp soluttion
-    sessionStorage.setItem("token", token);
-    fetchUserData();
-    setLoggedIn(true);
+  const login = (newToken: string) => {
+    sessionStorage.setItem("token", newToken);
+    setToken(newToken);
+    mutate();
   };
 
   const logout = () => {
     sessionStorage.removeItem("token");
-    setUserData(null);
-    setLoggedIn(false);
+    setToken(null);
+    mutate(null, false);
   };
 
   return (
     <UserContext.Provider
-      value={{ userData, isLoading, loggedIn, login, logout }}
+      value={{ userData: userData || null, isLoading, loggedIn, login, logout }}
     >
       {children}
     </UserContext.Provider>

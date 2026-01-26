@@ -20,7 +20,7 @@ export default function Header() {
           ) : userData ? (
             <div className="flex gap-4">
               <li>
-                <Link to="/recieved">Recieved</Link>
+                <Link to="/received">Received</Link>
               </li>
               <li>
                 <button

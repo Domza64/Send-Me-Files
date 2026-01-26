@@ -39,11 +39,13 @@ This project is mainly built for fun and personal use and although the app is ve
 
 ## TODO:
 
-- [ ] Finish all TODOs in code...
+- [ ] Cleanup comments TODOs and document everythingh
 - [ ] Rate limiting and protections
 - [ ] Implement Kafka (do I need it? No. But why not try it out anyway?) (e.g. when user wants to download zip of all files, send message to that topic and then consumer will begin zipping it up when it recieves messaage.)
 - [ ] Bunch of other stuff...
 - [ ] CI/CD pipeline, frontend on Cloudflare pages... backend and db?
 - [ ] username vs email or both for authentication, principal? Currently big mess!
+- [ ] Use httponly cookies and csrf tokens instead of just storing JWT in session storage
+- [ ] Dependency scanning, aikido, snyk...
 
 Made with ❤️ by [Domza64](https://www.domza.xyz)

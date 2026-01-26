@@ -1,6 +1,6 @@
 export default interface UserData {
   username: string;
-  recievedUploads: UploadInfo[];
+  receivedUploads: UploadInfo[];
 }
 
 export interface UploadInfo {

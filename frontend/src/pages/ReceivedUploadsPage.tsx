@@ -1,28 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useUserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import useSWR from "swr";
 import fetcher from "../api/fetcher";
-import { useEffect, useState } from "react";
 import { UploadInfo } from "../model/UserData";
 import ErrorMessage from "../components/ErrorMessage";
 
 export default function ReceivedUploads() {
-  const { loggedIn } = useUserContext();
   const { data, error, isLoading } = useSWR<UploadInfo[]>(
-    "http://localhost:8080/api/user/recieved",
+    "http://localhost:8080/api/user/received",
     fetcher,
   );
-  const [receivedUploads, setReceivedUploads] = useState<UploadInfo[]>([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setReceivedUploads(data || []);
-  }, [data]);
-
-  useEffect(() => {
-    if (!loggedIn) navigate("/login");
-  }, [loggedIn]);
 
   if (isLoading) {
     return (
@@ -44,7 +31,7 @@ export default function ReceivedUploads() {
     );
   }
 
-  if (!receivedUploads || receivedUploads.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <main className="flex justify-center items-center flex-grow flex-col p-4">
         <p className="text-center text-indigo-500 text-lg">Such empty :/</p>
@@ -55,9 +42,9 @@ export default function ReceivedUploads() {
   return (
     <main className="flex justify-center items-center flex-grow flex-col p-4">
       <div className="w-full max-w-3xl grid gap-4 mt-4">
-        {receivedUploads.map((upload) => (
+        {data.map((upload) => (
           <Link
-            to={`/recieved/${upload.uploadId}`}
+            to={`/receivedUpload/${upload.uploadId}`}
             key={upload.uploadId}
             className="bg-indigo-950/10 border-dashed border-2 border-indigo-900 rounded-lg p-4 flex flex-col gap-2 hover:bg-indigo-950/20 transition-colors"
           >

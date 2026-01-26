@@ -5,8 +5,10 @@ import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Login from "./pages/LoginPage";
 import { UserProvider } from "./context/UserContext";
-import RecievedUploads from "./pages/RecievedUploadsPage";
 import Footer from "./components/Footer";
+import ReceivedUpload from "./pages/RecievedUploadPage";
+import ReceivedUploads from "./pages/ReceivedUploadsPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -19,7 +21,22 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
-          <Route path="/recieved" element={<RecievedUploads />} />
+          <Route
+            path="/received"
+            element={
+              <ProtectedRoute>
+                <ReceivedUploads />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/receivedUpload/:id"
+            element={
+              <ProtectedRoute>
+                <ReceivedUpload />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
 
         <Footer />

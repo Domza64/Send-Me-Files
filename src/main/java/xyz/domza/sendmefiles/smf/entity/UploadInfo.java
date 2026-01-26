@@ -13,7 +13,7 @@ public class UploadInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Getter
-    private String uploadId;
+    private String uploadId; // TODO: This should be indexed
     @Getter
     private String message;
     @Getter

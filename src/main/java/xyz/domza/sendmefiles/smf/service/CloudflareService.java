@@ -4,8 +4,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.services.s3.model.S3Object;
 import xyz.domza.sendmefiles.smf.cloudflare.CloudflareR2Client;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 public class CloudflareService {
@@ -37,5 +42,17 @@ public class CloudflareService {
 
     public List<Bucket> listBuckets() {
         return r2Client.listBuckets();
+    }
+
+    public List<String> listObjects(String path) {
+        // Works now with 5 like 15 objects :/ Good luck later :)
+        List<S3Object> files = r2Client.listObjects("smf-uploads-dev");
+        List<String> fileNames = new ArrayList<>(files.size());
+        files.forEach(file -> {
+            if (file.key().startsWith(path)) {
+                fileNames.add(file.key());
+            }
+        });
+        return fileNames;
     }
 }
