@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.domza.smf.smfcore.dto.UploadInfoDTO;
 import xyz.domza.smf.smfcore.dto.UserDataDTO;
+import xyz.domza.smf.smfcore.service.UserDataService;
 import xyz.domza.smf.smfcore.service.UserService;
 import java.security.Principal;
 import java.util.List;
@@ -16,10 +17,25 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/user")
 public class UserDataController {
-    UserService userService;
+    private UserService userService;
+    private UserDataService userDataService;
 
-    public UserDataController(UserService userInfoService) {
-        this.userService = userInfoService;
+    public UserDataController(UserService userService, UserDataService userDataService) {
+        this.userService = userService;
+        this.userDataService = userDataService;
+    }
+
+    // TODO: Return some meaningful info
+    @GetMapping("/zip/{uploadId}")
+    public ResponseEntity<String> requestZipDownload(@PathVariable String uploadId) {
+        String response;
+        try {
+            response = userDataService.requestZipDownload(uploadId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating a zip download request. " + e.getMessage());
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/data")

@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import fetcher from "../api/fetcher";
 import ErrorMessage from "../components/ErrorMessage";
+import { useEffect, useState } from "react";
+import { API_URL } from "../config";
 
 export default function ReceivedUpload() {
   const { id } = useParams();
@@ -9,6 +11,34 @@ export default function ReceivedUpload() {
     "http://localhost:8080/api/user/received/" + id,
     fetcher,
   );
+  const [zipping, setZipping] = useState(false);
+  const [downloadReady, setDownloadReady] = useState<string | undefined>(
+    undefined,
+  );
+
+  const requestDownload = () => {
+    fetch(`${API_URL}/user/zip/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/zip",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        setZipping(true);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (zipping) {
+      // Todo: actually check if the zip is ready every 5 seconds... in future use websocket or something
+      setTimeout(() => {
+        setZipping(false);
+        setDownloadReady("downloadId");
+      }, 5000);
+    }
+  }, [zipping]);
 
   if (isLoading) {
     return (
@@ -41,7 +71,17 @@ export default function ReceivedUpload() {
   return (
     <main className="flex justify-center items-center flex-grow flex-col p-4">
       <div className="w-full max-w-3xl grid gap-4 mt-4">
-        <p className="underline">Download all as zip</p>
+        <button onClick={requestDownload} className="underline">
+          Download all as zip
+        </button>
+        {downloadReady && (
+          <span className="bg-indigo-500 p-4 rounded-lg">Download zip</span>
+        )}
+        {zipping && (
+          <span className="bg-indigo-500 p-4 rounded-lg animate-pulse">
+            Zipping...
+          </span>
+        )}
         {data.map((filename, index) => (
           <span
             key={index}

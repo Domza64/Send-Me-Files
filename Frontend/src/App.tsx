@@ -11,8 +11,6 @@ import ReceivedUploads from "./pages/ReceivedUploadsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const env = import.meta.env.MODE;
-  console.log("ENV:", env);
   return (
     <UserProvider>
       <Router>

@@ -29,8 +29,9 @@ To run this webapp in **development mode**:
 4. **Run both Spring Boot apps**.
 
 > Frontend is served on **localhost:5173** automatically when running docker compose
-> [PGWEB](https://github.com/sosedoff/pgweb) Database UI is served on **localhost:8081**
 > Core backend is listening on **localhost:8080**
+> [PGWEB](https://github.com/sosedoff/pgweb) Database UI is served on **localhost:8081**
+> [KAFBAT](https://github.com/kafbat/kafka-ui) Kafka UI is served on **localhost:8085**
 
 
 ## Why did I build this?
@@ -47,6 +48,7 @@ This project is mainly built for fun and personal use and although the app is ve
 - [ ] CI/CD pipeline, frontend on Cloudflare pages... backend and db?
 - [ ] username vs email or both for authentication, principal? Currently big mess!
 - [ ] Use httponly cookies and csrf tokens instead of just storing JWT in session storage
+- [ ] Logging...
 - [ ] Dependency scanning, aikido, snyk...
 
 Made with ❤️ by [Domza64](https://www.domza.xyz)
