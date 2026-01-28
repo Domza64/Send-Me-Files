@@ -13,18 +13,18 @@ services:
   pgweb:
     image: sosedoff/pgweb:latest
     ports:
-      - "8081:8081"
+      - "9090:8081"
     environment:
       - PGWEB_DATABASE_URL=postgres://myuser:secret@postgres:5432/mydatabase?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
   react-app:
-    build: ./frontend
+    build: ./Frontend
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app
+      - ./Frontend:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true

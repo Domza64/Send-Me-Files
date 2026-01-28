@@ -1,4 +1,3 @@
-
 # Send Me Files
 
 **Send Me Files** is a web app I built for fun. I made it for my own needs, as a way to easily transfer files (i guess mostly pctures and videos) without relying on apps like WhatsApp. It’s also a cool learning and portfolio project.
@@ -18,19 +17,20 @@ To run this webapp in **development mode**:
     cd Send-Me-Files
     ```
 
-3. **Create .env.development in /frontend**
+3. **Create .env in project root**
 
-   Copy the file named `EXAMPLE.env.development` and rename it to `.env.development`.
+   Copy the file named `EXAMPLE.env`, rename it to `.env` and fill it out
 
-4. **Create .env in project root**
+4. **Run docker compose**:
+   ```
+   docker compose -f compose-dev.yaml up
+   ```
 
-   Copy the file named `EXAMPLE.env` and rename it to `.env`.
+4. **Run both Spring Boot apps**.
 
-5. **Run the Spring Boot app** (backend):
-
-   Simply run the Spring Boot application (`./mvnw spring-boot:run` or via your IDE).
-
-> **Note:** Frontend is automatically served on localhost:5173 and [PGWEB](https://github.com/sosedoff/pgweb) UI is served on localhost:8081 cause it's usefull in dev :)
+> Frontend is served on **localhost:5173** automatically when running docker compose
+> [PGWEB](https://github.com/sosedoff/pgweb) Database UI is served on **localhost:8081**
+> Core backend is listening on **localhost:8080**
 
 
 ## Why did I build this?
@@ -39,7 +39,8 @@ This project is mainly built for fun and personal use and although the app is ve
 
 ## TODO:
 
-- [ ] Cleanup comments TODOs and document everythingh
+- [ ] Cleanup comments TODOs and document everything
+- [ ] Add kafka cluster to dev-compose (maybe even some s3 simulation service?)
 - [ ] Rate limiting and protections
 - [ ] Implement Kafka (do I need it? No. But why not try it out anyway?) (e.g. when user wants to download zip of all files, send message to that topic and then consumer will begin zipping it up when it recieves messaage.)
 - [ ] Bunch of other stuff...
