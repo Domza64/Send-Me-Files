@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests((requests) -> requests
                         // Public endpoints
-                        .requestMatchers("/api/auth/addNewUser", "/api/auth/generateToken", "/api/upload").permitAll()
+                        .requestMatchers("/api/auth/addNewUser", "/api/auth/generateToken", "/api/upload", "/actuator/**").permitAll()
                         // Role-based endpoints
                         .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")

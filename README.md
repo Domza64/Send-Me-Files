@@ -30,9 +30,16 @@ To run this webapp in **development mode**:
 
 > Frontend is served on **localhost:5173** automatically when running docker compose
 > Core backend is listening on **localhost:8080**
-> [PGWEB](https://github.com/sosedoff/pgweb) Database UI is served on **localhost:8081**
+> [PGWEB](https://github.com/sosedoff/pgweb) Database UI is served on **localhost:9090**
 > [KAFBAT](https://github.com/kafbat/kafka-ui) Kafka UI is served on **localhost:8085**
+> Minio UI (dev s3 simulation) is served on **localhost:9001**
 
+- Add temp user for testing:
+```bash 
+curl -v -X POST http://localhost:8080/api/auth/addNewUser \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","email":"admin@example.com","password":"admin","role":"ADMIN"}'
+```
 
 ## Why did I build this?
 

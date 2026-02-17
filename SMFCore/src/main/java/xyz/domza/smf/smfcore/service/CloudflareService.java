@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import xyz.domza.smf.smfcore.cloudflare.CloudflareR2Client;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +24,20 @@ public class CloudflareService {
         String accessKey = env.getProperty("cloudflare.access-key");
         String secretKey = env.getProperty("cloudflare.secret-key");
         String bucket = env.getProperty("cloudflare.bucket");
+        String customEndpoint = env.getProperty("S3_ENDPOINT");
+        String pathStyleAccess = env.getProperty("S3_PATH_STYLE_ACCESS");
 
         CloudflareR2Client.S3Config config = new CloudflareR2Client.S3Config(
                 accountId,
                 accessKey,
                 secretKey
         );
+        if (customEndpoint != null && !customEndpoint.isEmpty()) {
+            config.setEndpoint(customEndpoint);
+        }
+        if (pathStyleAccess != null) {
+            config.setPathStyleAccess(Boolean.parseBoolean(pathStyleAccess));
+        }
         this.r2Client = new CloudflareR2Client(config, bucket);
     }
 

@@ -1,6 +1,7 @@
 package xyz.domza.smf.smfcore.cloudflare;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.util.MimeType;
@@ -25,6 +26,18 @@ public class CloudflareR2Client {
     public CloudflareR2Client(S3Config config, String bucket) {
         this.s3Client = buildS3Client(config);
         this.bucket = bucket;
+        // Try to create bucket if it doesn't exist (for MinIO)
+        createBucketIfNotExists();
+    }
+
+    private void createBucketIfNotExists() {
+        try {
+            s3Client.createBucket(CreateBucketRequest.builder()
+                    .bucket(bucket)
+                    .build());
+        } catch (BucketAlreadyExistsException | BucketAlreadyOwnedByYouException e) {
+            // Bucket already exists - that's fine
+        }
     }
 
     public List<Bucket> listBuckets() {
@@ -92,39 +105,57 @@ public class CloudflareR2Client {
         }
     }
 
+
+    @Getter
+    @Setter
     public static class S3Config {
-        private final String accountId;
-        @Getter
-        private final String accessKey;
-        @Getter
-        private final String secretKey;
-        @Getter
-        private final String endpoint;
+        private String accountId;
+        private String accessKey;
+        private String secretKey;
+        private String endpoint;
+        private Boolean pathStyleAccess;
 
         public S3Config(String accountId, String accessKey, String secretKey) {
             this.accountId = accountId;
             this.accessKey = accessKey;
             this.secretKey = secretKey;
-            this.endpoint = String.format("https://%s.r2.cloudflarestorage.com", accountId);
         }
 
+        public String getEndpoint() {
+            // If custom endpoint is set, use it (for MinIO)
+            if (endpoint != null && !endpoint.isEmpty()) {
+                return endpoint;
+            }
+            // Otherwise use Cloudflare R2 endpoint
+            return String.format("https://%s.r2.cloudflarestorage.com", accountId);
+        }
     }
 
-    private static S3Client buildS3Client(S3Config config) {
+    private S3Client buildS3Client(S3Config config) {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(
                 config.getAccessKey(),
                 config.getSecretKey()
         );
 
-        S3Configuration serviceConfiguration = S3Configuration.builder()
-                .pathStyleAccessEnabled(true)
-                .build();
+        S3Configuration.Builder serviceConfigBuilder = S3Configuration.builder();
 
-        return S3Client.builder()
-                .endpointOverride(URI.create(config.getEndpoint()))
+        // Enable path-style access if specified (needed for MinIO)
+        if (config.pathStyleAccess != null) {
+            serviceConfigBuilder.pathStyleAccessEnabled(config.pathStyleAccess);
+        } else {
+            serviceConfigBuilder.pathStyleAccessEnabled(true);
+        }
+
+        software.amazon.awssdk.services.s3.S3ClientBuilder clientBuilder = S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .region(Region.of("auto"))
-                .serviceConfiguration(serviceConfiguration)
-                .build();
+                .serviceConfiguration(serviceConfigBuilder.build());
+
+        // Use custom endpoint if provided
+        if (config.getEndpoint() != null && !config.getEndpoint().isEmpty()) {
+            clientBuilder.endpointOverride(URI.create(config.getEndpoint()));
+        }
+
+        return clientBuilder.build();
     }
 }
