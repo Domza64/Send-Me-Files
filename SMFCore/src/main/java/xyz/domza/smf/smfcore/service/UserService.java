@@ -19,13 +19,13 @@ public class UserService {
     private PasswordEncoder encoder;
     private UserInfoRepository userInfoRepository;
     private UploadInfoRepository uploadInfoRepository;
-    private CloudflareService cloudflareService;
+    private StorageService storageService;
 
-    public UserService(PasswordEncoder encoder, UserInfoRepository userInfoRepository, UploadInfoRepository uploadInfoRepository, CloudflareService cloudflareService) {
+    public UserService(PasswordEncoder encoder, UserInfoRepository userInfoRepository, UploadInfoRepository uploadInfoRepository, StorageService storageService) {
         this.encoder = encoder;
         this.userInfoRepository = userInfoRepository;
         this.uploadInfoRepository = uploadInfoRepository;
-        this.cloudflareService = cloudflareService;
+        this.storageService = storageService;
     }
 
     public String addUser(UserInfo userInfo) {
@@ -84,6 +84,6 @@ public class UserService {
             throw new NotFoundException("Upload " + uploadId + " not found."); // why returns 403 instead of 404
         }
 
-        return cloudflareService.listObjects(uploadId);
+        return storageService.listObjects(uploadId);
     }
 }

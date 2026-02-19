@@ -25,17 +25,10 @@ public class UserDataController {
         this.userDataService = userDataService;
     }
 
-    // TODO: Return some meaningful info
     @GetMapping("/zip/{uploadId}")
-    public ResponseEntity<String> requestZipDownload(@PathVariable String uploadId) {
-        String response;
-        try {
-            response = userDataService.requestZipDownload(uploadId);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating a zip download request. " + e.getMessage());
-        }
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Void> requestZipDownload(@PathVariable String uploadId) {
+        userDataService.requestZipDownload(uploadId);
+        return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/data")

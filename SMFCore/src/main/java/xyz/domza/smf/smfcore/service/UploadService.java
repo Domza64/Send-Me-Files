@@ -13,11 +13,11 @@ import java.util.UUID;
 @Service
 public class UploadService {
     private UserService userService;
-    private CloudflareService cloudflareService;
+    private StorageService storageService;
 
-    public UploadService(UserService userService, CloudflareService cloudflareService) {
+    public UploadService(UserService userService, StorageService storageService) {
         this.userService = userService;
-        this.cloudflareService = cloudflareService;
+        this.storageService = storageService;
     }
 
     // TODO: Support requestUploadId
@@ -35,7 +35,7 @@ public class UploadService {
         });
 
         UUID uploadId = UUID.randomUUID();
-        cloudflareService.uploadFiles(files, uploadId.toString());
+        storageService.uploadFiles(files, uploadId.toString());
         userService.addReceivedUpload(userData.get().username(), uploadId.toString(), message, files.size());
     }
 }

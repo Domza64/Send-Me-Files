@@ -1,5 +1,6 @@
 package xyz.domza.smf.smfcore.exception;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
+@Order(1)
 public class FileUploadExceptionHandler {
 
     @ExceptionHandler(StorageException.class)

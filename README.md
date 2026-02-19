@@ -1,6 +1,6 @@
 # Send Me Files
 
-**Send Me Files** is a web app I built for fun. I made it for my own needs, as a way to easily transfer files (i guess mostly pctures and videos) without relying on apps like WhatsApp. It’s also a cool learning and portfolio project.
+**Send Me Files** is a web app I mostly built for fun, but also as a project to experiment with and learn different technologies.
 
 ---
 
@@ -19,7 +19,7 @@ To run this webapp in **development mode**:
 
 3. **Create .env in project root**
 
-   Copy the file named `EXAMPLE.env`, rename it to `.env` and fill it out
+   Copy the file named `EXAMPLE.env`, rename it to `.env`
 
 4. **Run docker compose**:
    ```
@@ -48,14 +48,11 @@ This project is mainly built for fun and personal use and although the app is ve
 ## TODO:
 
 - [ ] Cleanup comments TODOs and document everything
-- [ ] Add kafka cluster to dev-compose (maybe even some s3 simulation service?)
 - [ ] Rate limiting and protections
-- [ ] Implement Kafka (do I need it? No. But why not try it out anyway?) (e.g. when user wants to download zip of all files, send message to that topic and then consumer will begin zipping it up when it recieves messaage.)
-- [ ] Bunch of other stuff...
 - [ ] CI/CD pipeline, frontend on Cloudflare pages... backend and db?
 - [ ] username vs email or both for authentication, principal? Currently big mess!
 - [ ] Use httponly cookies and csrf tokens instead of just storing JWT in session storage
-- [ ] Logging...
+- [ ] Logging: [SEQ](https://datalust.co/) - Microservices, [Sentry](https://sentry.io/welcome/) - Frontend
 - [ ] Dependency scanning, aikido, snyk...
 
 Made with ❤️ by [Domza64](https://www.domza.xyz)

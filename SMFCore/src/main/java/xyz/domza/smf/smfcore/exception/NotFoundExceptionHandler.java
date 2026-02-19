@@ -1,5 +1,6 @@
 package xyz.domza.smf.smfcore.exception;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Order(1)
 public class NotFoundExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)

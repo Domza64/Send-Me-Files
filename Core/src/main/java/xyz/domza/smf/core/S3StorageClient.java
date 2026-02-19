@@ -1,13 +1,13 @@
-package xyz.domza.smf.smfcore.cloudflare;
+package xyz.domza.smf.core;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
-import org.springframework.util.MimeType;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.MimeType;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import org.springframework.http.MediaTypeFactory;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -19,11 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class CloudflareR2Client {
+public class S3StorageClient {
     private final S3Client s3Client;
     private final String bucket;
 
-    public CloudflareR2Client(S3Config config, String bucket) {
+    public S3StorageClient(S3Config config, String bucket) {
         this.s3Client = buildS3Client(config);
         this.bucket = bucket;
         // Try to create bucket if it doesn't exist (for MinIO)
@@ -109,25 +109,14 @@ public class CloudflareR2Client {
     @Getter
     @Setter
     public static class S3Config {
-        private String accountId;
         private String accessKey;
         private String secretKey;
         private String endpoint;
         private Boolean pathStyleAccess;
 
-        public S3Config(String accountId, String accessKey, String secretKey) {
-            this.accountId = accountId;
+        public S3Config(String accessKey, String secretKey) {
             this.accessKey = accessKey;
             this.secretKey = secretKey;
-        }
-
-        public String getEndpoint() {
-            // If custom endpoint is set, use it (for MinIO)
-            if (endpoint != null && !endpoint.isEmpty()) {
-                return endpoint;
-            }
-            // Otherwise use Cloudflare R2 endpoint
-            return String.format("https://%s.r2.cloudflarestorage.com", accountId);
         }
     }
 
