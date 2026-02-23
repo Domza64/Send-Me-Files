@@ -48,6 +48,9 @@ This project is mainly built for fun and personal use and although the app is ve
 ## TODO:
 
 - [ ] Cleanup comments TODOs and document everything
+- [ ] Consume file zip messages
+- [ ] implement file downloads (single and zip)
+- [ ] Delete uploaded files after download
 - [ ] Rate limiting and protections
 - [ ] CI/CD pipeline, frontend on Cloudflare pages... backend and db?
 - [ ] username vs email or both for authentication, principal? Currently big mess!
